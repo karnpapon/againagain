@@ -12,9 +12,8 @@
     </div>
     <div class="scroll-area">
       <div class="codeblock-wrapper">
-        <div class="codeblock" v-for="(block, index) of codes" :key="index">
-          <Codeblock/>
-          <!-- <button @click="textfx">baffling</button> -->
+        <div class="codeblock" v-for="(item, index) of codes" :key="index">
+          <Codeblock :dataDetails="item"/>
         </div>
       </div>
     </div>
@@ -26,14 +25,18 @@
 import Codeblock from "./codeblock";
 import Footer from "./footer";
 import baffle from "baffle";
+import { exerpedData } from "../data/exerpted";
 
 export default {
   name: "Index",
   data() {
     return {
-      codes: [1, 2, 3, 4, 5, 6],
+      codes: [],
       b: ""
     };
+  },
+  created() {
+    this.codes = exerpedData;
   },
   methods: {
     // textfx() {
@@ -117,7 +120,11 @@ h3 {
   :hover {
     cursor: pointer;
     background: $main-colorize-color;
-    transition: 150ms;
+    transition: 200ms ease-in-out;
+  }
+
+  :active {
+    background-color: white;
   }
 }
 

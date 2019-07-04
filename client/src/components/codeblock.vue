@@ -14,7 +14,7 @@
   :key="index"
 ></MyDrawer>
         </MyCanvas>
-        <code>play{l=LocalIn.ar(8);o={|i|Pulse.ar(l[i]*16+95,0.9.rand)}!8;LocalOut.ar(o.reverse.tanh);w=BLowShelf.ar(_,47,1,_);p=BPeakEQ.ar(_,285,1,_);h=BHiShelf.ar(_,190,1,_);o=Splay.ar(o);o=h.(w.(p.(o,48),-48),-48);o=GVerb.ar(tanh(o)).flop.mean;LeakDC.ar(Limiter.ar(h.(w.(p.(o,-48),48),48)))} play{l=LocalIn.ar(8);o={|i|Pulse.ar(l[i]*16+95,0.9.rand)}!8;LocalOut.ar(o.reverse.tanh);w=BLowShelf.ar(_,47,1,_);p=BPeakEQ.ar(_,285,1,_);h=BHiShelf.ar(_,190,1,_);o=Splay.ar(o);o=h.(w.(p.(o,48),-48),-48);o=GVerb.ar(tanh(o)).flop.mean;LeakDC.ar(Limiter.ar(h.(w.(p.(o,-48),48),48)))}</code>
+        <code>{{ dataDetails.exerpt}}</code>
       </pre>
     </div>
   </div>
@@ -36,10 +36,7 @@ export default {
       chartValues: [
         { val: 24, color: "red" },
         { val: 32, color: "#0f0" },
-        { val: 66, color: "rebeccapurple" },
-        { val: 1, color: "green" },
-        { val: 28, color: "blue" },
-        { val: 60, color: "rgba(150, 100, 0, 0.2)" }
+        { val: 66, color: "rebeccapurple" }
       ]
     };
   },
@@ -64,7 +61,9 @@ export default {
     MyCanvas,
     MyDrawer
   },
-  props: {},
+  props: {
+    dataDetails: Object
+  },
   computed: {},
   methods: {
     runCode() {
@@ -110,6 +109,9 @@ export default {
 
 .run {
   background-color: $main-colorize-color;
+  :active {
+    color: black;
+  }
 }
 
 .code-btn {

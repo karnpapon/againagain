@@ -8,7 +8,6 @@ const percentHeightToPix = (percent, ctx) =>
   Math.floor((ctx.canvas.height / 100) * percent);
 
 export default {
-  // Gets us the provider property from the parent <my-canvas> component.
   inject: ["provider"],
 
   props: {
@@ -100,14 +99,14 @@ export default {
     ctx.fill();
 
     // Draw the text
-    ctx.fillStyle = "#000";
-    ctx.font = "28px sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(
-      Math.floor(this.value),
-      newBox.x + newBox.w / 2,
-      newBox.y - 14
-    );
+    // ctx.fillStyle = "#000";
+    // ctx.font = "28px sans-serif";
+    // ctx.textAlign = "center";
+    // ctx.fillText(
+    //   Math.floor(this.value),
+    //   newBox.x + newBox.w / 2,
+    //   newBox.y - 14
+    // );
   }
 };
 </script>
