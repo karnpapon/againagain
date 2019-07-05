@@ -1,8 +1,8 @@
 <template>
   <div class="sourcescode">
-    <div @mousedown="handleOn" @mouseup="handleOff" @click="runCode" class="exerpt-wrapper">
+    <div @click="toggleRun(dataDetails.def)" class="exerpt-wrapper">
       <pre :class="{'run' :isCodeExecuted}">
-      <MyCanvas v-if="isCodeExecuted" style="width: 100%; height: 600px;">
+      <!-- <MyCanvas v-if="isCodeExecuted" style="width: 100%; height: 600px;">
         <MyDrawer
   v-for="( obj, index ) of chartValues"
   :x1="((index / chartValues.length) * 100)"
@@ -13,7 +13,7 @@
   :value="obj.val"
   :key="index"
 ></MyDrawer>
-        </MyCanvas>
+        </MyCanvas> -->
         <code>{{ dataDetails.exerpt}}</code>
       </pre>
     </div>
@@ -21,9 +21,9 @@
 </template>
 
 <script>
-// import io from "socket.io-client";
+import io from "socket.io-client";
 
-// const socket = io();
+const socket = io();
 import MyCanvas from "./canvas.vue";
 import MyDrawer from "./drawer.vue";
 
@@ -66,23 +66,16 @@ export default {
   },
   computed: {},
   methods: {
-    runCode() {
+    toggleRun(def) {
       this.isCodeExecuted = !this.isCodeExecuted;
+      if(this.isCodeExecuted){
+       this.send("playPattern",def); 
+      } else {
+        this.send("stopPattern",def);
+      }
     },
-    handleOn() {
-      // this.isCodeExecuted = true;
-      // this.send("noteOn", 5.0, 5.0);
-    },
-    handleOff() {
-      // this.isCodeExecuted = false;
-      // this.send("noteOff", 5.0, 5.0);
-    },
-    send(eventType, x, y) {
-      // console.log(eventType, x, y);
-      // socket.emit(eventType, {
-      //   x: 0.5,
-      //   y: 0.3
-      // });
+    send(eventType, def) {
+      socket.emit(eventType, def);
     }
   }
 };

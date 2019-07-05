@@ -17,25 +17,18 @@ let sockets = {};
 app.use(compression({}));
 app.use(express['static'](__dirname + '/../server/public'));
 
-// Boot supercollider server here
 bootServer();
 
 webserver.listen(port, () => {
   console.log(`[INFO] Open in your browser: http://localhost:${port}`);
 });
 
-/**
- * Called whenever a new websocket connection is opened.
- */
 io.on('connection', (socket) => {
 
   if (socketEventHandlers.connect) {
     socketEventHandlers.connect(socket);
   }
 
-  /**
-   * Connect Event handlers from event-handlers
-   */
   _.forIn(socketEventHandlers, (fn, name) => {
     if (name !== 'connect') {
       socket.on(name, (data) => fn(socket, data));
