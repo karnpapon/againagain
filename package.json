@@ -1,33 +1,31 @@
 {
-    "name": "againagain-tbc-version",
-    "version": "1.0.0",
-    "description": "again again TBC version.",
-    "main": "server.js",
-    "scripts": {
-        "start": "node -r esm server/server.js",
-        "dev": "nodemon -r esm server/server.js"
-    },
-    "keywords": [],
-    "author": "Karnpapon Boonput",
-    "license": "MIT",
-    "dependencies": {
-        "body-parser": "^1.18.3",
-        "compression": "^1.7.3",
-        "cors": "^2.8.5",
-        "esm": "^3.2.25",
-        "express": "^4.16.4",
-        "lodash": "^4.17.11",
-        "mongodb": "^3.1.10",
-        "mongoose": "^5.3.15",
-        "socket.io": "^1.5.1",
-        "socket.io-client": "^1.5.1",
-        "supercolliderjs": "^0.14.0"
-    },
-    "devDependencies": {
-        "nodemon": "^1.18.7",
-        "vue-loader": "^15.7.0",
-        "vue-template-compiler": "^2.6.10",
-        "webpack": "^1.13.0",
-        "webpack-stream": "^3.2.0"
-    }
+  "name": "againagain-tbc-version",
+  "version": "1.0.0",
+  "description": "again again TBC version.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node -r esm server/server.js",
+    "dev": "nodemon -r esm server/server.js"
+  },
+  "keywords": [],
+  "author": "Karnpapon Boonput",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "cors": "^2.8.5",
+    "esm": "^3.2.25",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "supercolliderjs": "^0.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.7",
+    "vue-loader": "^15.7.0",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.35.2",
+    "webpack-stream": "^5.2.1"
+  }
 }
