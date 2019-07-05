@@ -6,13 +6,21 @@
 </template>
 
 <script>
+
+
 export default {
   data() {
     return {
       provider: {
-        context: null
+        context: null,
+        meter: null,
+        waveform: null
       }
     };
+  },
+
+  create(){
+  
   },
 
   // Allows any child component to `inject: ['provider']` and have access to it.
@@ -30,6 +38,7 @@ export default {
     this.$refs["my-canvas"].height = this.$refs[
       "my-canvas"
     ].parentElement.clientHeight;
+
   }
 };
 </script>
