@@ -10,6 +10,8 @@
         <p class="lead">Cadson Demak & The ███████</p>
       </div>
     </div>
+    <button @click="marchingClick">click</button>
+    <canvas class="cv"></canvas>
     <div class="scroll-area">
       <div class="codeblock-wrapper">
         <div class="codeblock" v-for="(item, index) of codes" :key="index">
@@ -24,29 +26,65 @@
 <script>
 import Codeblock from "./codeblock";
 import Footer from "./footer";
-import baffle from "baffle";
 import { exerpedData } from "../data/exerpted";
+import Marching from "../../node_modules/marching/dist/index.js";
+// import Tone from "tone";
 
 export default {
   name: "Index",
   data() {
     return {
       codes: [],
-      b: ""
+      b: "",
+      SDF: null
     };
   },
   created() {
     this.codes = exerpedData;
+
+    // let scriptTag = document.createElement("script");
+    // scriptTag.setAttribute("src", "../../node_modules/marching/dist/index.js");
+    // document.head.appendChild(scriptTag);
+
+    // console.log("Marching", Marching);
+    // this.meter = new Tone.Meter(0.95);
+    // this.waveform = new Tone.Waveform(256);
+    // Tone.UserMedia.enumerateDevices().then(function(devices) {
+    //   console.log("enum devices", devices);
+    // });
   },
   methods: {
-    // textfx() {
-    //   this.b.reveal(1000);
-    // }
+    marchingClick() {
+      this.SDF.init(document.querySelector("canvas"));
+      this.SDF.export(window);
+      let sphere, repeat, rot;
+      let s = this.SDF.march(
+        (rot = this.SDF.Rotation(
+          this.SDF.StairsIntersection(
+            this.SDF.Sphere(2, null, this.SDF.Material.white),
+            (repeat = this.SDF.Repeat(
+              (sphere = this.SDF.Sphere(0.125)),
+              Vec3(0.25)
+            )),
+            0.125
+          ),
+          Vec3(1)
+        ))
+      ).render(4, true);
+
+      this.SDF.FFT.start();
+
+      window.onframe = time => {
+        rot.angle = time / 4;
+        repeat.distance.x = this.SDF.FFT.low;
+        repeat.distance.y = this.SDF.FFT.mid;
+        repeat.distance.z = this.SDF.FFT.high;
+        sphere.radius = this.SDF.FFT.mid * this.SDF.FFT.high;
+      };
+    }
   },
   mounted() {
-    // this.b = baffle("#baffle", {
-    //   characters: " ░▒█▓█></"
-    // });
+    this.SDF = window.Marching;
   },
   components: {
     Codeblock,
@@ -77,6 +115,10 @@ h3 {
   width: fit-content;
   /* align-items: center; */
   margin-left: 20px;
+}
+
+.cv {
+  position: absolute;
 }
 
 .headline {
