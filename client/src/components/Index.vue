@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="headline-section">
       <div class="title-wrapper">
         <div class="headline-wrapper">
           <h1 class="headline">Again again (2019)</h1>
@@ -10,12 +10,16 @@
         <p class="lead">Cadson Demak & The ███████</p>
       </div>
     </div>
-    <button @click="marchingClick">click</button>
     <canvas class="cv"></canvas>
-    <div class="scroll-area">
+    <div class="scroll-area" @click="setMarchingPlay">
       <div class="codeblock-wrapper">
-        <div class="codeblock" v-for="(item, index) of codes" :key="index">
-          <Codeblock :dataDetails="item"/>
+        <div
+          class="codeblock"
+          v-for="(item, index) of codes"
+          :class="{'active':childList.some( chld => chld.isCodeExecuted && item.def === chld.def)}"
+          :key="index"
+        >
+          <Codeblock ref="child" :dataDetails="item" @clicked="codeBlockState"/>
         </div>
       </div>
     </div>
@@ -36,32 +40,44 @@ export default {
     return {
       codes: [],
       b: "",
-      SDF: null
+      SDF: null,
+      isMarchingPlaying: false,
+      targetCodeBlock: "",
+      childList: []
     };
   },
   created() {
     this.codes = exerpedData;
 
-    // let scriptTag = document.createElement("script");
-    // scriptTag.setAttribute("src", "../../node_modules/marching/dist/index.js");
-    // document.head.appendChild(scriptTag);
-
-    // console.log("Marching", Marching);
     // this.meter = new Tone.Meter(0.95);
     // this.waveform = new Tone.Waveform(256);
     // Tone.UserMedia.enumerateDevices().then(function(devices) {
     //   console.log("enum devices", devices);
     // });
   },
+  computed: {
+    marching() {
+      if (this.isMarchingPlaying) {
+        this.playMarching();
+      } else {
+        this.stopMarching();
+      }
+    }
+  },
   methods: {
-    marchingClick() {
-      this.SDF.init(document.querySelector("canvas"));
-      this.SDF.export(window);
+    codeBlockState(value, target) {
+      this.targetCodeBlock = {
+        status: value,
+        def: target
+      };
+    },
+    playMarching() {
       let sphere, repeat, rot;
+      let mat1 = this.SDF.Material("phong", Vec3(0.05), Vec3(1), Vec3(0.5));
       let s = this.SDF.march(
         (rot = this.SDF.Rotation(
           this.SDF.StairsIntersection(
-            this.SDF.Sphere(2, null, this.SDF.Material.white),
+            this.SDF.Sphere(2, null, mat1),
             (repeat = this.SDF.Repeat(
               (sphere = this.SDF.Sphere(0.125)),
               Vec3(0.25)
@@ -70,10 +86,10 @@ export default {
           ),
           Vec3(1)
         ))
-      ).render(4, true);
-
+      )
+        // .light(this.SDF.Light(Vec3(0, 1, 0), Vec3(0.25, 0.25, 0.5), 0.5))
+        .render(4, true);
       this.SDF.FFT.start();
-
       window.onframe = time => {
         rot.angle = time / 4;
         repeat.distance.x = this.SDF.FFT.low;
@@ -81,10 +97,24 @@ export default {
         repeat.distance.z = this.SDF.FFT.high;
         sphere.radius = this.SDF.FFT.mid * this.SDF.FFT.high;
       };
+    },
+    stopMarching() {
+      this.SDF.clear();
+    },
+    setMarchingPlay() {
+      // if (this.$children.some(child => child.isCodeExecuted)) {
+      //   this.isMarchingPlaying = true;
+      // } else {
+      //   this.isMarchingPlaying = false;
+      // }
+      // this.marching;
     }
   },
   mounted() {
     this.SDF = window.Marching;
+    this.SDF.init(document.querySelector("canvas"));
+    this.SDF.export(window);
+    this.childList = this.$refs.child;
   },
   components: {
     Codeblock,
@@ -101,10 +131,16 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
   padding: 20px;
 }
 h3 {
   text-align: center;
+}
+
+.headline-section {
+  z-index: 5;
+  width: 100%;
 }
 
 .title-wrapper {
@@ -161,17 +197,23 @@ h3 {
 
   :hover {
     cursor: pointer;
-    background: $main-colorize-color;
+    background: white;
+    color: black;
     transition: 200ms ease-in-out;
   }
 
   :active {
-    background-color: white;
+    background-color: $main-colorize-color;
   }
+}
+
+.active {
+  box-shadow: inset 0px 0px 0px 1px rgb(255, 255, 255);
 }
 
 .scroll-area {
   /* overflow: hidden; */
   margin-bottom: 30px;
+  z-index: 4;
 }
 </style>

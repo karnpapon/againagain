@@ -28,28 +28,27 @@
  * The client then needs to register a handler for 'name'.
  */
 
-import { resolve } from 'path';
-import { server, map, msg, lang } from 'supercolliderjs';
+import { resolve } from "path";
+import { server, map, msg, lang } from "supercolliderjs";
 
 const context = {
   users: {}
 };
 
-
 export function bootServer() {
-  return server.boot().then((s) => {
-    lang.boot({ debug: false }).then(function (sclang) {
+  return server.boot({ numInputBusChannels: 0 }).then(s => {
+    lang.boot({ debug: false }).then(function(sclang) {
+      context.lang = sclang;
 
-      context.lang = sclang
-
-      sclang.executeFile(resolve(__dirname, './sc/init.scd')).then(function (answer) {
-        console.log('init = ' + answer);
-      }, console.error);
-
+      sclang
+        .executeFile(resolve(__dirname, "./sc/init.scd"))
+        .then(function(answer) {
+          console.log("init = " + answer);
+        }, console.error);
     });
 
     // context.server = s;
-    
+
     // let { allpassTone, verb, distortion, master, kick , player } = context.server.synthDefs({
     //   allpassTone: {
     //     path: resolve(__dirname, './sc/allpassTone.scd')
@@ -75,11 +74,11 @@ export function bootServer() {
     // context.spawnGroup = context.server.group();
     // context.rbus = context.server.audioBus(2);
     // context.dbus = context.server.audioBus(2);
-    
+
     // context.allpassTone = allpassTone
     // context.kick = kick
     // context.player = player
-    // context.distortion = distortion 
+    // context.distortion = distortion
     // context.verb = verb
     // context.master = master
 
@@ -87,7 +86,7 @@ export function bootServer() {
     // context.server.synth(context.verb, {in: context.rbus.id, out: context.bus.id });
     // context.server.synth(context.master, { in: context.bus.id, out: 0 }, -1, msg.AddActions.TAIL);
   });
-};
+}
 
 function connect(socket) {
   console.log(`Connecting user ${socket.id}`);
@@ -100,17 +99,25 @@ function disconnect(socket) {
     releaseSynth(user);
     // remove user
     delete context.users[socket.id];
+    context.lang.write(`
+      Pbindef(\\main_kick).stop;
+      Pbindef(\\pad).stop;
+      Pbindef(\\chords).stop;
+      Pbindef(\\melodyhook).stop;
+      Pdef(\\rhythms).stop;
+      Pbindef(\\bass).stop;
+    `);
     console.log(`Removing user ${socket.id}`);
   }
 }
 
-const freqMap = map.exp({minval: 100, maxval: 5000});
-const panMap = map.linear({minval: -1, maxval: 1});
+const freqMap = map.exp({ minval: 100, maxval: 5000 });
+const panMap = map.linear({ minval: -1, maxval: 1 });
 
 function playPattern(socket, data) {
-  console.log('data = ', data); 
+  console.log("data = ", data);
   switch (data) {
-    case 'main_kick':
+    case "main_kick":
       context.lang.write(`
         Pbindef(\\main_kick,
           \\instrument, \\kick,
@@ -128,10 +135,10 @@ function playPattern(socket, data) {
           \\rout, ~dbus,
           \\rsend, -30,
         ).play(t, quant: 1);
-      `) 
-    break;
+      `);
+      break;
 
-    case 'bass':
+    case "bass":
       context.lang.write(`
         Pbindef(\\bass,
           \\instrument, \\osc,
@@ -156,10 +163,10 @@ function playPattern(socket, data) {
           \\rout, ~rbus,
           \\rsend, -20,
         ).play(t, quant:1);
-      `)  
-    break;
+      `);
+      break;
 
-    case 'pad':
+    case "pad":
       context.lang.write(`
         Pbindef(\\pad,
           \\instrument, \\osc,
@@ -178,10 +185,10 @@ function playPattern(socket, data) {
           \\out, 0,
           \\rsend, -10,
         ).play(t, quant: 1);
-      `)
+      `);
       break;
 
-    case 'chords':
+    case "chords":
       context.lang.write(`
         Pbindef(\\chords,
           \\instrument, \\osc,
@@ -205,10 +212,10 @@ function playPattern(socket, data) {
           \\rout, ~rbus,
           \\rsend, -10,
         ).play(t, quant:1);
-      `)
-    break;
+      `);
+      break;
 
-    case 'melodyhook':
+    case "melodyhook":
       context.lang.write(`
         Pbindef(\\melodyhook,
           \\instrument, \\osc,
@@ -229,9 +236,9 @@ function playPattern(socket, data) {
           \\rout, ~rbus,
           \\rsend, -20,
         ).play(t, quant:1);
-      `)
-    break;
-    case 'rhythms':
+      `);
+      break;
+    case "rhythms":
       context.lang.write(`
         Pdef(\\rhythms,
 		Pwrand([
@@ -363,11 +370,10 @@ function playPattern(socket, data) {
 		],
 		[40,18,3,3,15,25,5].normalizeSum, inf)
 	).play(t, quant: 1);
-      `)
-    break;
+      `);
+      break;
   }
 
-  
   // let synth = context.server.synth(context.allpassTone, {
   //   freq: freqMap(data.y),
   //   ffreq: freqMap(data.x),
@@ -384,25 +390,24 @@ function playPattern(socket, data) {
 }
 
 function stopPattern(socket, data) {
-
   switch (data) {
-    case 'main_kick':
-      context.lang.write(`Pbindef(\\main_kick).stop;`)
+    case "main_kick":
+      context.lang.write(`Pbindef(\\main_kick).stop;`);
       break;
-    case 'pad':
-      context.lang.write(`Pbindef(\\pad).stop;`)
+    case "pad":
+      context.lang.write(`Pbindef(\\pad).stop;`);
       break;
-    case 'chords':
-      context.lang.write(`Pbindef(\\chords).stop;`)
+    case "chords":
+      context.lang.write(`Pbindef(\\chords).stop;`);
       break;
-    case 'melodyhook':
-      context.lang.write(`Pbindef(\\melodyhook).stop;`)
+    case "melodyhook":
+      context.lang.write(`Pbindef(\\melodyhook).stop;`);
       break;
-    case 'rhythms':
-      context.lang.write(`Pdef(\\rhythms).stop;`)
+    case "rhythms":
+      context.lang.write(`Pdef(\\rhythms).stop;`);
       break;
-    case 'bass':
-      context.lang.write(`Pbindef(\\bass).stop;`)
+    case "bass":
+      context.lang.write(`Pbindef(\\bass).stop;`);
       break;
   }
   // let user = context.users[socket.id];
@@ -412,15 +417,15 @@ function stopPattern(socket, data) {
 }
 
 function noteSlide(socket, data) {
-  console.log('noteSlide', data);
+  console.log("noteSlide", data);
   let user = context.users[socket.id];
   if (user && user.synth) {
-    user.synth.then((syn) => {
+    user.synth.then(syn => {
       syn.set({
         freq: freqMap(data.y),
         ffreq: freqMap(data.x),
         pan: panMap(data.x)
-      })
+      });
     });
   }
 }
@@ -437,11 +442,10 @@ function releaseSynth(user) {
     // (envelope generator). Then the `Synth` will free itself
     // because its `doneAction` is 2 — free the `Synth` when `EnvGen`
     // is done.
-    user.synth.then(syn => syn.set({gate: 0}));
+    user.synth.then(syn => syn.set({ gate: 0 }));
     delete user.synth;
   }
 }
-
 
 export const socketEventHandlers = {
   connect,

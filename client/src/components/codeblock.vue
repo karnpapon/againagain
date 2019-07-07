@@ -1,7 +1,7 @@
 <template>
-  <div class="sourcescode">
+  <div class="sourcescode" @click="stateMonitoring">
     <div @click="toggleRun(dataDetails.def)" class="exerpt-wrapper">
-      <pre :class="{'run' :isCodeExecuted}">
+      <pre>
         <!-- <MyCanvas v-if="isCodeExecuted" style="width: 100%; height: 600px;">
           <MyDrawer
   v-for="( obj, index ) of chartValues"
@@ -21,12 +21,11 @@
 </template>
 
 <script>
-// import io from "socket.io-client";
+import io from "socket.io-client";
 
 // import Tone from "tone";
-// import StartAudioContext from "startaudiocontext";
 
-// const socket = io();
+const socket = io();
 import MyCanvas from "./canvas.vue";
 import MyDrawer from "./drawer.vue";
 
@@ -37,6 +36,7 @@ export default {
       meter: null,
       waveform: null,
       isCodeExecuted: false,
+      def: "",
       b: "",
       chartValues: [
         { val: 24, color: "red" },
@@ -46,6 +46,7 @@ export default {
     };
   },
   mounted() {
+    this.def = this.dataDetails.def;
     let dir = 1;
     let selectedVal = Math.floor(Math.random() * this.chartValues.length);
 
@@ -71,6 +72,9 @@ export default {
   },
   computed: {},
   methods: {
+    stateMonitoring(event) {
+      this.$emit("clicked", this.isCodeExecuted, this.dataDetails.def);
+    },
     toggleRun(def) {
       this.isCodeExecuted = !this.isCodeExecuted;
       if (this.isCodeExecuted) {
@@ -80,7 +84,7 @@ export default {
       }
     },
     send(eventType, def) {
-      // socket.emit(eventType, def);
+      socket.emit(eventType, def);
     }
   }
 };
@@ -106,7 +110,8 @@ export default {
 }
 
 .run {
-  background-color: $main-colorize-color;
+  background-color: white;
+  color: black;
   :active {
     color: black;
   }

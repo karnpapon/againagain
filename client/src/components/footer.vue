@@ -3,8 +3,15 @@
     <div class="wrapper">
       <div class="details">
         this project is integrating between
-        <p class="underline">SuperCollider</p>and
-        <p class="underline">Vue.js</p>
+        <p class="underline">
+          <a target="blank" href="https://crucialfelix.github.io/supercolliderjs/">SuperCollider</a>
+        </p>and
+        <p class="underline">
+          <a target="blank" href="https://vuejs.org/">Vue.js</a>
+        </p>and
+        <p class="underline">
+          <a target="blank" href="https://github.com/charlieroberts/marching">marching.js</a>
+        </p>
       </div>
       <div class="credits">
         <span class="icon">
@@ -64,6 +71,14 @@ export default {
 .underline {
   text-decoration: underline;
   margin: 0 5px;
+
+  :hover {
+    color: $main-colorize-color !important;
+  }
+
+  :visited {
+    color: white;
+  }
 }
 
 .credits {

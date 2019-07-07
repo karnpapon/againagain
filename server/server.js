@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-import _ from 'lodash';
-import express from 'express';
-import http from 'http';
-import SocketIO from 'socket.io';
-import compression from 'compression';
-import { bootServer, socketEventHandlers } from './supercollider-server';
+import _ from "lodash";
+import express from "express";
+import http from "http";
+import SocketIO from "socket.io";
+import compression from "compression";
+import { bootServer, socketEventHandlers } from "./supercollider-server";
 
 let app = express();
 let webserver = http.Server(app);
@@ -15,7 +15,7 @@ let users = [];
 let sockets = {};
 
 app.use(compression({}));
-app.use(express['static'](__dirname + '/../server/public'));
+app.use(express["static"](__dirname + "/../server/public"));
 
 bootServer();
 
@@ -23,15 +23,14 @@ webserver.listen(port, () => {
   console.log(`[INFO] Open in your browser: http://localhost:${port}`);
 });
 
-io.on('connection', (socket) => {
-
+io.on("connection", socket => {
   if (socketEventHandlers.connect) {
     socketEventHandlers.connect(socket);
   }
 
   _.forIn(socketEventHandlers, (fn, name) => {
-    if (name !== 'connect') {
-      socket.on(name, (data) => fn(socket, data));
+    if (name !== "connect") {
+      socket.on(name, data => fn(socket, data));
     }
-  })
+  });
 });
