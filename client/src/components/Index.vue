@@ -42,6 +42,7 @@ export default {
       b: "",
       SDF: null,
       isMarchingPlaying: false,
+      isMarching: false,
       targetCodeBlock: "",
       childList: []
     };
@@ -57,10 +58,13 @@ export default {
   },
   computed: {
     marching() {
-      if (this.isMarchingPlaying) {
+      // prevent re-triggered marching.
+      if (this.isMarchingPlaying && !this.isMarching) {
         this.playMarching();
-      } else {
+        this.isMarching = true;
+      } else if (!this.isMarchingPlaying) {
         this.stopMarching();
+        this.isMarching = false;
       }
     }
   },
@@ -73,7 +77,7 @@ export default {
     },
     playMarching() {
       let sphere, repeat, rot;
-      let mat1 = this.SDF.Material("phong", Vec3(0.05), Vec3(1), Vec3(0.5));
+      let mat1 = this.SDF.Material("phong", Vec3(0.5), Vec3(1), Vec3(0.5));
       let s = this.SDF.march(
         (rot = this.SDF.Rotation(
           this.SDF.StairsIntersection(
@@ -87,11 +91,11 @@ export default {
           Vec3(1)
         ))
       )
-        // .light(this.SDF.Light(Vec3(0, 1, 0), Vec3(0.25, 0.25, 0.5), 0.5))
-        .render(4, true);
+        // .light(this.SDF.Light(Vec3(0.5, 1, 0.24), Vec3(1), 1))
+        .render(2.5, true);
       this.SDF.FFT.start();
       window.onframe = time => {
-        rot.angle = time / 4;
+        rot.angle = (time * 0.5) / 4;
         repeat.distance.x = this.SDF.FFT.low;
         repeat.distance.y = this.SDF.FFT.mid;
         repeat.distance.z = this.SDF.FFT.high;
@@ -102,12 +106,12 @@ export default {
       this.SDF.clear();
     },
     setMarchingPlay() {
-      // if (this.$children.some(child => child.isCodeExecuted)) {
-      //   this.isMarchingPlaying = true;
-      // } else {
-      //   this.isMarchingPlaying = false;
-      // }
-      // this.marching;
+      if (this.childList.some(child => child.isCodeExecuted)) {
+        this.isMarchingPlaying = true;
+      } else {
+        this.isMarchingPlaying = false;
+      }
+      this.marching;
     }
   },
   mounted() {
@@ -130,7 +134,7 @@ export default {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 20px;
 }
@@ -141,6 +145,7 @@ h3 {
 .headline-section {
   z-index: 5;
   width: 100%;
+  margin-bottom: auto;
 }
 
 .title-wrapper {
@@ -155,6 +160,7 @@ h3 {
 
 .cv {
   position: absolute;
+  height: calc(100% - 180px);
 }
 
 .headline {

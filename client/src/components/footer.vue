@@ -47,6 +47,8 @@ export default {
   width: 100%;
   border-top: 1px solid white;
   padding: 20px;
+  z-index: 5;
+  margin-top: auto;
 }
 
 .footer-details {

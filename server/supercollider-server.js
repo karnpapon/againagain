@@ -96,7 +96,7 @@ function connect(socket) {
 function disconnect(socket) {
   let user = context.users[socket.id];
   if (user) {
-    releaseSynth(user);
+    // releaseSynth(user);
     // remove user
     delete context.users[socket.id];
     context.lang.write(`
@@ -416,41 +416,41 @@ function stopPattern(socket, data) {
   // }
 }
 
-function noteSlide(socket, data) {
-  console.log("noteSlide", data);
-  let user = context.users[socket.id];
-  if (user && user.synth) {
-    user.synth.then(syn => {
-      syn.set({
-        freq: freqMap(data.y),
-        ffreq: freqMap(data.x),
-        pan: panMap(data.x)
-      });
-    });
-  }
-}
+// function noteSlide(socket, data) {
+//   console.log("noteSlide", data);
+//   let user = context.users[socket.id];
+//   if (user && user.synth) {
+//     user.synth.then(syn => {
+//       syn.set({
+//         freq: freqMap(data.y),
+//         ffreq: freqMap(data.x),
+//         pan: panMap(data.x)
+//       });
+//     });
+//   }
+// }
 
-function releaseSynth(user) {
-  if (user.synth) {
-    // What was stored is a `Promise` for a `Synth`,
-    // so use `.then` to get the resolved actual `Synth`.
+// function releaseSynth(user) {
+//   if (user.synth) {
+// What was stored is a `Promise` for a `Synth`,
+// so use `.then` to get the resolved actual `Synth`.
 
-    // This would immediately kill the synth:
-    // synth.then((syn) => syn.free());
+// This would immediately kill the synth:
+// synth.then((syn) => syn.free());
 
-    // This will set the gate to 0 which will release the `EnvGen`
-    // (envelope generator). Then the `Synth` will free itself
-    // because its `doneAction` is 2 — free the `Synth` when `EnvGen`
-    // is done.
-    user.synth.then(syn => syn.set({ gate: 0 }));
-    delete user.synth;
-  }
-}
+// This will set the gate to 0 which will release the `EnvGen`
+// (envelope generator). Then the `Synth` will free itself
+// because its `doneAction` is 2 — free the `Synth` when `EnvGen`
+// is done.
+//     user.synth.then(syn => syn.set({ gate: 0 }));
+//     delete user.synth;
+//   }
+// }
 
 export const socketEventHandlers = {
   connect,
   disconnect,
   playPattern,
-  stopPattern,
-  noteSlide
+  stopPattern
+  // noteSlide
 };
