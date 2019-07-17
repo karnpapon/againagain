@@ -52,30 +52,72 @@ const exerpedData = [
   },
   {
     title: "exerpt-00",
+    def: "pad",
+    exerpt: `
+    Pbindef(\\pad,
+     \\instrument,\\osc,
+     \\dur, Pseq([Prand([2,4,16,8])],inf),
+     \\atk, 0.4,
+     \\sus, 0,
+     \\rel, 0.25,
+     \\c0, Pexprand(1,2),
+     \\c1, Pexprand(1,2).neg,
+     \\detune, Pfunc({rrand(0.15,0.4)}!3),
+     \\buf, Prand(~wt_buf[0..3], inf),
+     \\degree, 4,
+     \\midinote, 48 + 12,
+     \\amp, 0.35,
+     \\pan, Pwhite(-0.4,0.4),
+     \\out, 0,
+     \\rsend, -10,
+    ).play(t, quant: 1);
+
+    Pbindef(\\melody,
+      \\instrument, \\osc,
+      \\dur, Pseq([
+        Pseq([14,1/4,1/4,1/4,1/4]),
+        Pseq([15,1/4,1/4,1/4,1/4]),
+      ],inf),
+      \\atk, 0.01,
+      \\sus, 0.03,
+      \\rel, 2,
+      \\c0, 1,
+      \\c1, 1,
+      \\detune, 0.2,
+      \\buf, Pseq([~wt_buf[5]],inf),
+      \\midinote, Pseq([39+2,51+2,55+2,62+2,65+2]+ 12,inf),
+      \\amp, 0.075,
+      \\out, 0,
+      \\rout, ~rbus,
+    ).play(t, quant:1);
+    `
+  },
+  {
+    title: "exerpt-00",
     def: "chords",
     exerpt: `
     Pbindef(\\chords,
-     \\instrument,\\osc,
-     \\dur, 4,
-     \\atk, 0.001,
-     \\sus, 0.5,
-     \\rel, Pseq([Prand([3,5])], inf),
-     \\c0, 0,
-     \\c1, Pwhite(1,10).neg,
-     \\detune, 0.3,
-     \\buf, Prand(~wt_buf[4..9], inf),
-     \\midinote, Pseq([
-        Pn(p1,4),
-        Pn(p2,4),
-        Pn(p3,4),
-        Pn(p4,4),
+      \\instrument, \\osc,
+      \\dur, 4,
+      \\atk, 0.001,
+      \\sus, 0.5,
+      \\rel, Pseq([Prand([3,5])], inf),
+      \\c0, 0,
+      \\c1, Pwhite(1,10).neg,
+      \\detune, 0.3,
+      \\buf, Prand(~wt_buf[4..9], inf),
+      \\midinote, Pseq([
+        Pn([41,53,57,64,67],4),
+        Pn([38,48,60,64,67],4),
+        Pn([46,58,62,65,67],4),
+        Pn([36,55,58,60,67],4),
       ],inf),
-     \\amp, Pseq([Pgeom(0.1,-1.dbamp,4)],inf),
-     \\pan, Pwhite(0.01,0.3) * Pseq([1,-1],inf),
-     \\out, 0,
-     \\rout, ~rbus,
-     \\rsend, -10,
-    ).play(t, quant:1);  
+      \\amp, Pseq([Pgeom(0.1,-1.dbamp,4)],inf),
+      \\pan, Pwhite(0.01,0.3) * Pseq([1,-1],inf),
+      \\out, 0,
+      \\rout, ~rbus,
+      \\rsend, -10,
+    ).play(t, quant:1);
     `
   },
   {
@@ -101,29 +143,6 @@ const exerpedData = [
        \\rout, ~rbus,
        \\rsend, -20,
       ).play(t, quant:1);
-    `
-  },
-  {
-    title: "exerpt-00",
-    def: "pad",
-    exerpt: `
-    Pbindef(\\pad,
-     \\instrument,\\osc,
-     \\dur, Pseq([Prand([2,4,16,8])],inf),
-     \\atk, 0.4,
-     \\sus, 0,
-     \\rel, 0.25,
-     \\c0, Pexprand(1,2),
-     \\c1, Pexprand(1,2).neg,
-     \\detune, Pfunc({rrand(0.15,0.4)}!3),
-     \\buf, Prand(~wt_buf[0..3], inf),
-     \\degree, 4,
-     \\midinote, 48 + 12,
-     \\amp, 0.35,
-     \\pan, Pwhite(-0.4,0.4),
-     \\out, 0,
-     \\rsend, -10,
-    ).play(t, quant: 1);
     `
   },
   {
@@ -259,7 +278,7 @@ const exerpedData = [
 			)
 		],
 		[40,18,3,3,15,25,5].normalizeSum, inf)
-	)
+	).play(t, quant:1);
     `
   }
 ];
