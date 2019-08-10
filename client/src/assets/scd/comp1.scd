@@ -250,7 +250,7 @@ Pdef(\hard_rhythms,
 
 
 
-
+s.scope
 ///////////////////
 /// COMPOSITION ///
 ///////////////////
@@ -259,6 +259,7 @@ Pdef(\hard_rhythms,
 {
 	1.wait;
 	x={FreeVerb.ar(CombN.ar(VarSaw.ar(LFSaw.ar(32,0,12,8),0,LFSaw.ar([18,12],0,1/64,1/64)).sin/2,1,1,2))}.play;
+	a={Out.ar(5,LFPar.ar(1)|LFPar.ar(5)+RLPF.ar(x=Pan2.ar(InFeedback.ar(5),SinOsc.ar(5.5)),3e3,LFPar.ar(1/25)/2+1.7));x*LFPar.ar(99)}.play;
 	16.wait;
 	/*Synth(\osc, [\rel, 4,\freq, 41.midicps,\buf, ~wt_buf[3],\amp, 0.1,\out, 0]);
 	0.25.wait;
@@ -277,6 +278,7 @@ Pdef(\hard_rhythms,
 	1.5.wait;*/
 
 	x.release;
+	a.release;
 	Pbindef(\hard_kick, \filterFreq, 1000, \f, 50, \dur, 0.25, \tlo,0.5).play(t);
 	Pbindef(\chords).play(t);
 	0.5.wait;
@@ -334,8 +336,8 @@ Pdef(\hard_rhythms,
 
 	x.free;
 	Pbindef(\chords).stop;
-	Pbindef(\bass).stop;
 	8.wait;
+	Pbindef(\bass).stop;
 	Pdef(\hard_rhythms).stop;
 	8.wait;
 	Pbindef(\pad).stop;

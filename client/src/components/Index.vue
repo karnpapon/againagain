@@ -11,7 +11,7 @@
       </div>
     </div>
     <canvas class="cv"></canvas>
-    <div class="scroll-area" @click="setMarchingPlay">
+    <div id="actx" class="scroll-area" @click="setMarchingPlay">
       <div class="codeblock-wrapper">
         <div
           class="codeblock"
@@ -19,7 +19,7 @@
           :class="{'active':childList.some( chld => chld.isCodeExecuted && item.def === chld.def)}"
           :key="index"
         >
-          <Codeblock ref="child" :dataDetails="item" @clicked="codeBlockState"/>
+          <Codeblock ref="child" :dataDetails="item" />
         </div>
       </div>
     </div>
@@ -32,7 +32,9 @@ import Codeblock from "./codeblock";
 import Footer from "./footer";
 import { exerpedData } from "../data/exerpted";
 import Marching from "../../node_modules/marching/dist/index.js";
-// import Tone from "tone";
+import Tone from "tone";
+import Audio from "../assets/scripts/audiocontext"
+// import StartAudioContext from "startaudiocontext";
 
 export default {
   name: "Index",
@@ -44,17 +46,22 @@ export default {
       isMarchingPlaying: false,
       isMarching: false,
       targetCodeBlock: "",
-      childList: []
+      childList: [],
+      audioSource: null
     };
   },
   created() {
     this.codes = exerpedData;
+    Tone.Transport.start();
+    // this.audioSource = new Tone.Analyser
+   
+  },
+  mounted() {
+    this.SDF = window.Marching;
+    this.SDF.init(document.querySelector("canvas"));
+    this.SDF.export(window);
+    this.childList = this.$refs.child;
 
-    // this.meter = new Tone.Meter(0.95);
-    // this.waveform = new Tone.Waveform(256);
-    // Tone.UserMedia.enumerateDevices().then(function(devices) {
-    //   console.log("enum devices", devices);
-    // });
   },
   computed: {
     marching() {
@@ -66,15 +73,19 @@ export default {
         this.stopMarching();
         this.isMarching = false;
       }
-    }
+    },
+    
   },
   methods: {
-    codeBlockState(value, target) {
-      this.targetCodeBlock = {
-        status: value,
-        def: target
-      };
-    },
+    // codeBlockState(value, target) {
+    //   this.targetCodeBlock = {
+    //     status: value,
+    //     def: target
+    //   };
+    // },
+    // getBuffSource(value){
+    //  console.log("value getBuffSource", value) 
+    // },
     playMarching() {
       let sphere, repeat, rot;
       let mat1 = this.SDF.Material("phong", Vec3(0.5), Vec3(1), Vec3(0.5));
@@ -93,14 +104,19 @@ export default {
       )
         // .light(this.SDF.Light(Vec3(0.5, 1, 0.24), Vec3(1), 1))
         .render(2.5, true);
-      this.SDF.FFT.start();
-      window.onframe = time => {
-        rot.angle = (time * 0.5) / 4;
-        repeat.distance.x = this.SDF.FFT.low;
-        repeat.distance.y = this.SDF.FFT.mid;
-        repeat.distance.z = this.SDF.FFT.high;
-        sphere.radius = this.SDF.FFT.mid * this.SDF.FFT.high;
-      };
+      // this.SDF.FFT.start();
+      // // Audio.start(this.audioSource) 
+      // window.onframe = time => {
+      //   rot.angle = (time * 0.5) / 4;
+      //   // console.log("ana", Audio.FFT.low)
+      //   // repeat.distance.x = Audio.FFT.low;
+      //   // repeat.distance.y = Audio.FFT.mid;
+      //   // repeat.distance.z = Audio.FFT.high;
+      //   repeat.distance.x = this.SDF.FFT.low + 0.4;
+      //   repeat.distance.y = this.SDF.FFT.mid;
+      //   repeat.distance.z = this.SDF.FFT.high;
+      //   sphere.radius = this.SDF.FFT.mid * this.SDF.FFT.high;
+      // };
     },
     stopMarching() {
       this.SDF.clear();
@@ -112,13 +128,7 @@ export default {
         this.isMarchingPlaying = false;
       }
       this.marching;
-    }
-  },
-  mounted() {
-    this.SDF = window.Marching;
-    this.SDF.init(document.querySelector("canvas"));
-    this.SDF.export(window);
-    this.childList = this.$refs.child;
+    },
   },
   components: {
     Codeblock,

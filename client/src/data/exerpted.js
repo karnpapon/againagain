@@ -1,7 +1,8 @@
 const exerpedData = [
   {
     title: "exerpt-00",
-    def: "main_kick",
+    def: "lpf_kick",
+    path: "./stem-for-web/stem-for-web_nkick00.mp3",
     exerpt: `
       Pbindef(\\main_kick,
        \\instrument,\\kick,
@@ -24,6 +25,7 @@ const exerpedData = [
   {
     title: "exerpt-00",
     def: "bass",
+    path: "./stem-for-web/stem-for-web_bass.mp3",
     exerpt:`
       Pbindef(\\bass,
        \\instrument,\\osc,
@@ -53,6 +55,7 @@ const exerpedData = [
   {
     title: "exerpt-00",
     def: "chords",
+    path: "./stem-for-web/stem-for-web_chd01.mp3",
     exerpt: `
     Pbindef(\\chords,
      \\instrument,\\osc,
@@ -81,6 +84,7 @@ const exerpedData = [
   {
     title: "exerpt-00",
     def: "melodyhook",
+    path: "./stem-for-web/stem-for-web_mel.mp3",
     exerpt: `
       Pbindef(\\melodyhook,
        \\instrument,\\osc,
@@ -106,6 +110,7 @@ const exerpedData = [
   {
     title: "exerpt-00",
     def: "pad",
+    path: "./stem-for-web/stem-for-web_arp.mp3",
     exerpt: `
     Pbindef(\\pad,
      \\instrument,\\osc,
@@ -129,6 +134,7 @@ const exerpedData = [
   {
     title: "exerpt-00",
     def: "rhythms",
+    path: "./stem-for-web/stem-for-web_gkick00.mp3",
     exerpt: `
     Pdef(\\rhythms,
 		Pwrand([
