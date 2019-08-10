@@ -24,28 +24,32 @@ Pbindef(\pad,
 
 Pbindef(\chords,
 	\instrument, \osc,
-	\dur, Pseq([4],inf),
+	\dur, 4,
 	\atk, 0.001,
 	\sus, 0.5,
-	\rel, Pseq([Prand([3,5])], inf),
+	\rel, 3,
 	\c0, 0,
 	\c1, Pwhite(1,10).neg,
 	\detune, Pstutter(6, Pexprand(0.1,0.8)),
-	\buf, ~wt_buf[6],
+	\buf, Prand(~wt_buf[4..9], inf),
 	\midinote, Pseq([
 		Pn([41,53,57,64,67],3),
 		Pn(\,1),
 		Pn([38,48,60,64,67],3),
 		Pn(\,1),
 	],inf),
-	\amp, Pseq([Pgeom(0.12,-1.dbamp,4)],inf),
+	\amp, Pseq([Pgeom(0.11,-2.dbamp,1)],inf),
 	\pan, Pwhite(0.01,0.3) * Pseq([1,-1],inf),
 	// \out, ~mbus,
-	\rout, ~rbus,
-	\rsend, -10,
+	// \rout, ~rbus,
+	\rsend, -15,
 );
 
+// Pbindef(\chords).play(t,quant:1);
+// Pbindef(\ambi, \dur, 4,\rel, 4, \midinote, Pseq([Prand([57,53,48,50])],inf)).play(t, quant:1);
+// Pbindef(\normal_kick, \rel, 1, \dur, Pseq([0.5,3.5],inf)).play(t, quant:1);
 
+// 57,57,57,53,53,48,50,48,50
 
 ///////////////////
 ////// BASS ///////
@@ -95,14 +99,47 @@ Pbindef(\female_chorus2,
 	\rsend, -10
 );
 
+Pbindef(\stretch_female,
+	\instrument, \stretchedFragments,
+    \bufnum, ~pbfmmono,
+    \start, Pwhite(0, (~pbfmmono.numFrames * 0.7).asInteger, inf),
+    \delta, Pexprand(0.2, 1.5, inf),
+    \time, Pkey(\delta),
+    \stretch, Pexprand(1.0, 4.0, inf),
+    \amp, 0.5,
+    \attack, 0.1,
+    \decay, 0.01
+);
+
+// Pbindef(\male_vox).play(t);
+
 Pbindef(\female_chorus,
 	\instrument, \player,
-	\stretch, 4,
 	\dur, 16,
-	\mul, 2,
+	\mul, 2.25,
 	\rate, 1,
 	\buf, ~pbfm,
 	\out, ~mbus,
+);
+
+Pbindef(\male_vox,
+	\instrument, \player,
+	\dur, 16,
+	\mul, 0.25,
+	\buf, Pseq([
+		// Pseq([~pbm, ~pbm2]),
+		Pseq([~pbm]),
+	],inf),
+	\out, ~mbus,
+);
+
+
+Pbindef(\gt,
+	\instrument, \player,
+	\dur, 8,
+	\mul, 1.25,
+	\buf, ~pbgt,
+	\out, 0,
 );
 
 ///////////////////
@@ -115,15 +152,16 @@ Pbindef(\melody,
 	\atk, 0.01,
 	\sus, 0.03,
 	\rel, 2,
-	\c0, 1,
-	\c1, 1,
+	\c0, -1,
+	\c1, -3,
 	\detune, 0.2,
-	\buf, Pseq([~wt_buf[5]],inf),
+	\buf, Prand(~wt_buf[4..9], inf),
 	\midinote, Pseq([39+2,51+2,55+2,62+2,65+2]+ 12,inf),
-	\amp, 0.12,
-	\out, ~mbus,
+	\amp, 0.1,
 	\rout, ~rbus,
 );
+
+// Pbindef(\melody).play;
 
 
 Pbindef(\ambi,
@@ -146,16 +184,52 @@ Pbindef(\ambi,
 	\midinote, Pxrand([
 		Pseq([\,57,53,Prand([48,69,72,\])],inf),
 	],inf) + 12,
-	\amp, 0.25,
-	\out, ~dbus,
+	\amp, 0.2,
+	// \out, ~dbus,
 	\rout, ~rbus,
 	\rsend, -10,
 );
 
+Pbindef(\fsaw,
+	\instrument, \fatsaw,
+	\amp, 0.6,
+	\attack, 0.01,
+	\decay, 0.3,
+	\sustain, 0.1,
+	\release, 0.4,
+	\time, Ptime(inf),
+	\filterFreqStart, 300,
+	// \resonance, Pfunc({ |ev| ev['time'].linexp(0,10,1,0.2); }),
+	\midinote, Pseq(~parser.asMidi("f3 a3 f4 e4 c4 a3 c4 d4 g3 c4 a3 d3"), inf),
+	\dur, 0.25,
+	\out, ~mbus
+);
+
+// Pbindef(\fsaw).play(t);
+
+Scale.directory;
 
 ///////////////////
 ///// RYTHMIC /////
 ///////////////////
+
+Pbindef(\normal_kick,
+	\instrument, \kick,
+	\dur, Pseq([Pseq([1,1,1,0.75],1),Pseq([1.25,1,1,0.75],inf)],inf),
+	\freq, Pstutter(16,Pexprand(1000,20000,inf)),
+	\detune, 0,
+	\buf, Pstutter(16, Prand(~wt_buf[0..9],inf)),
+	\atk, 0,
+	\sus, 0,
+	\filterFreq, Pseries(50,2, 100),
+	\rel, Pexprand(0.02,0.04),
+	\c1, -4,
+	\amp, 0.8,
+	\pan, Pseq([1,-1],inf),
+	// \out, ~mbus,
+	// \rout, ~dbus,
+	\rsend, -30,
+);
 
 Pbindef(\hard_kick,
 	\instrument, \gabber,
@@ -166,6 +240,21 @@ Pbindef(\hard_kick,
 	\thigh, 0.5,
 	\out, ~mbus
 );
+
+Pbindef(
+	\deter_rand_kick,
+	\type, \phrase,
+	\instrument, \deter_rand_beats,
+	\dur, 2
+);
+
+Pdef(\deter_rand_beats, {
+	Pbind(
+		\instrument, \gabber,
+		\dur, Pkey(\dur) / 8 * Pseq([1,Pconst(8, Prand([0.25, 0.5, 0.75], inf))]).trace,
+	)
+});
+
 
 Pdef(\hard_rhythms,
 	Pwrand([
@@ -245,77 +334,100 @@ Pdef(\hard_rhythms,
 		)
 	],
 	[50,18,3,3,15,25,5].normalizeSum, inf)
+);
+
+g = Group.new;
+h = Group.new;
+k = Group.new;
+j = Group.new;
 )
-)
 
+s.meter
 
-
+// Pbindef(\ambi, \out, ~dbus);
+// Pbindef(\female_chorus, \group, g)
+// Pbindef(\female_chorus, \rout, ~rbus)
+// Pbindef(\chords, \rout, 0)
 
 ///////////////////
 /// COMPOSITION ///
 ///////////////////
 (
-// s.record(path: "~/Desktop/out.wav".standardizePath);
+s.record(path: "~/Desktop/out.wav".standardizePath);
 {
-	1.wait;
+	// 2.wait;
 	x={FreeVerb.ar(CombN.ar(VarSaw.ar(LFSaw.ar(32,0,12,8),0,LFSaw.ar([18,12],0,1/64,1/64)).sin/2,1,1,2))}.play;
-	16.wait;
-	/*Synth(\osc, [\rel, 4,\freq, 41.midicps,\buf, ~wt_buf[3],\amp, 0.1,\out, 0]);
-	0.25.wait;
-	Synth(\osc, [\rel, 4,\freq, 53.midicps,\buf, ~wt_buf[3],\amp, 0.1,\out, 0]);
-	0.25.wait;
-	Synth(\osc, [\rel, 4,\freq, 57.midicps,\buf, ~wt_buf[3],\amp, 0.1,\out, 0]);
-	0.25.wait;
-	Synth(\osc, [\rel, 4,\freq, 64.midicps,\buf, ~wt_buf[3],\amp, 0.1,\out, 0]);
-	0.25.wait;
-	Synth(\osc, [\rel, 4,\freq, 67.midicps,\buf, ~wt_buf[3],\amp, 0.1,\out, 0]);
-	1.wait;*/
+	Pbindef(\normal_kick, \amp, 0.5, \rel, 1, \dur, Pseq([0.5,3.5],inf)).play(t, quant:1);
+	8.wait;
+	Pbindef(\chords,
+		\atk, 4,
+		\group, h,
+		\rout, ~rbus,
+		\amp, Pseq([Pgeom(0.12,-2.dbamp,1)] * 0.5,inf),
+		\midinote, Pseq([
+		Pn([41,53,57+12,64,67] - 24,3),
+		Pn(\,1),
+		Pn([38,48+12,60+[12,0,24].choose,64,72] - 24,3),
+		Pn(\,1),
+	],inf)).play(t);
+	30.wait;
 
-	/*Pbindef(\hard_kick, \filterFreq, Pseries(200,10), \dur, Pseq([Pseq([0.25],56),Pseq([0.125],4)],inf), \f, Pstutter(6, Pexprand(50,100))).play(t);
-	14.5.wait;
-	Pbindef(\hard_kick).stop;
-	1.5.wait;*/
+	Pbindef(\chords).stop;
+	2.wait;
 
+	Pbindef(\fsaw).play(t);
 	x.release;
+	15.875.wait;
+
+	Pbindef(\fsaw).stop;
+	0.125.wait;
+
+	Pbindef(\fsaw, \filterFreqStart, 1000).play(t);
+	Pbindef(\normal_kick).stop;
 	Pbindef(\hard_kick, \filterFreq, 1000, \f, 50, \dur, 0.25, \tlo,0.5).play(t);
-	Pbindef(\chords).play(t);
+	Pbindef(\chords,\atk, 0.001,\buf, ~wt_buf[6],\amp, Pseq([Pgeom(0.25,-2.dbamp,1)],inf) * 0.4).play(t);
 	0.5.wait;
 	Pbindef(\hard_kick, \filterFreq, 1000, \f, 50, \tlo, 0).play(t);
-	31.wait;
+	31.5.wait;
 	Pbindef(\hard_kick).stop;
 	Pbindef(\chords).stop;
-	1.wait;
+	Pbindef(\fsaw).stop;
+	0.5.wait;
 
-	x = {b=LocalBuf(9e4,2).clear;i=Sweep.ar(BufRd.ar(2,b,Saw.ar(12,3e4,4e4)),9e4);BufWr.ar(Saw.ar([8,9]),b,i);(BufRd.ar(2,b,i)/2 )* 0.25}.play;
-	1.wait;
+	x = {b=LocalBuf(90000.0,2).clear;i=Sweep.ar(BufRd.ar(2,b,Saw.ar(12,30000.0,40000.0)),90000.0);BufWr.ar(Saw.ar([8,9]),b,i);(BufRd.ar(2,b,i)/2 )* 0.25}.play;
+	0.5.wait;
+
+	Pbindef(\gt).play(t);
+	0.5.wait;
 
 	x.release;
 	Pbindef(\hard_kick, \filterFreq, 1000, \f, 50, \dur, 0.25, \tlo,0.5).play(t);
-	Pbindef(\chords).play(t);
+	Pbindef(\chords, \midinote, Pseq([Pn([41,53,57,64,67],3),Pn(\,1),Pn([38,48,60,64,72],3),Pn(\,1)],inf)).play(t);
 	Pbindef(\pad).play(t);
+	Pbindef(\fsaw, \amp, 0.25, \filterFreqStart, 2000, \dur, Pseq([0.5], inf), \midinote, Pseq([Pn([53 - 12],32),Pn([50 - 12],32),Pn([58 - 12],32),Pn([43],32)],inf),\pan, Pwhite(0.01,0.3) * Pseq([1,-1],inf) ).play(t);
+	// Pbindef(\melody, \group, j, \rout, ~rbus, \amp, 0.1).play(t);
 	Pbindef(\bass).play(t);
-	Pbindef(\melody).play(t);
-	Pbindef(\ambi).play(t);
+	Pbindef(\ambi, \group, k, \rout, ~dbus, \rsend, -20, \amp, 0.3).play(t);
 	1.wait;
 	Pbindef(\hard_kick, \filterFreq, 1550, \f, 50, \tlo, 0);
 	31.wait;
 	// add female_chorus
-	Pbindef(\female_chorus).play(t);
+	Pbindef(\chords, \amp, Pseq([Pgeom(0.25,-2.dbamp,1)],inf) * 0.55);
+	Pbindef(\female_chorus, \group, g, \rout, ~rbus).play(t);
 	31.75.wait;
-	Pbindef(\female_chorus).stop;
+
 	Pbindef(\hard_kick).stop;
 	Pbindef(\chords).stop;
 	Pbindef(\pad).stop;
-	Pbindef(\bass).stop;
-	Pbindef(\melody).stop;
+	// Pbindef(\fsaw).stop;
+	Pbindef(\bass).play(t);
+	// Pbindef(\melody).stop;
 	Pbindef(\ambi).stop;
 	0.25.wait;
 
 	Pbindef(\chords, \amp, Pseq([Pgeom(0.15,-1.dbamp,4)],inf)).play(t);
 	Pdef(\hard_rhythms).play(t);
-	Pbindef(\pad).play(t);
-	Pbindef(\melody).play(t);
-	Pbindef(\ambi).play(t);
+	// Pbindef(\fsaw, \release, 0.125, \decay, 0.1, \dur, 0.5, \midinote, Pseq([Pn([53 - 12],64),Pn([50 - 12],64),Pn([58 - 12],64),Pn([43],64)],inf) ).play(t);
 	Pbindef(\bass,
 		\dur, 0.25,
 		\midinote, Pseq([
@@ -324,25 +436,34 @@ Pdef(\hard_rhythms,
 			Pn([58 - 24],64),
 			Pn([43 - 12],64),
 	],inf)).play(t);
+	Pbindef(\female_chorus).stop;
+	Pbindef(\pad).play(t);
+	Pbindef(\melody).play(t);
+	Pbindef(\ambi).play(t);
+	Pbindef(\fsaw).stop;
+	32.wait;
+
+	Pbindef(\gt).stop;
+	Pbindef(\fsaw, \amp, 0.53, \filterFreqStart, 1500, \dur, Pseq([0.25], inf), \midinote, Pseq(~parser.asMidi("f3 a3 f4 e4 c4 a3 c4 d4 g3 c4 a3 d3"), inf)).play(t);
+	32.wait;
+
+	Pbindef(\fsaw,\filterFreqStart, 500);
+	Pbindef(\male_vox, \group, g, \rout, ~rbus).play(t);
 	64.wait;
 
-	x = Synth(\distortion, [\amp, 0.2,\amount, 0.5]);
-	32.wait;
-
-	x.set(\amount, 0.99,\amp, 0.2);
-	32.wait;
-
 	x.free;
-	Pbindef(\chords).stop;
 	Pbindef(\bass).stop;
-	8.wait;
 	Pdef(\hard_rhythms).stop;
-	8.wait;
 	Pbindef(\pad).stop;
 	Pbindef(\melody).stop;
+	16.wait;
+	Pbindef(\fsaw).stop;
+	Pbindef(\chords).stop;
 	Pbindef(\ambi).stop;
-	8.wait;
-	// s.stopRecording;
+	16.wait;
+	Pbindef(\male_vox).stop;
+	4.stop;
+	s.stopRecording;
 }.fork;
 )
 

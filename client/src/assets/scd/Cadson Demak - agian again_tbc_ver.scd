@@ -18,6 +18,7 @@ ServerOptions.devices
 ~pbm = Buffer.read(s, "/Users/mac/Desktop/ch_male.wav");
 ~pbm2 = Buffer.read(s, "/Users/mac/Desktop/ch_male2.wav");
 ~pbgt = Buffer.read(s, "/Users/mac/Desktop/gtr.wav");
+~pbfmmono = Buffer.readChannel(s, "/Users/mac/Desktop/ch_female.wav", channels: [0]);
 )
 
 s.plotTree
@@ -39,20 +40,7 @@ s.newBusAllocators;
 ~mbus = Bus.audio(s,2);
 
 s.waitForBoot({
-
-	/*var p1,p2,p3,p4,p5;
-	var md1,md2,md3,md4;*/
-
-	/*md1 = Pseq([1,1,0.5,1,2]);
-	md2 = Pseq([0.5,0.5,1,3]);
-	md3 = Pseq([1,2]);
-	md4 = Pseq([0.5,0.5,2]);*/
-
-	// p1 = [39+2,51+2,55+2,62+2,65+2];
-	// p2 = [36+2,46+2,58+2,62+2,65+2];
-	// p3 = [44+2,56+2,60+2,63+2,65+2];
-	// p4 = [34+2,53+2,56+2,58+2,65+2];
-
+	~parser = TheoryNoteParser.new;
 	~wt_sig = 10.collect({
 		arg i;
 		var numSegs = i.linexp(0,9,4,40).round;
@@ -101,6 +89,20 @@ s.waitForBoot({
 		Out.ar(rout, sig * rsend.dbamp); //"post-fader" send to reverb
 	}).add;
 
+	SynthDef(\fatsaw, {
+		| out=0, freq = 440, amp=0.1, gate=1, attack=0.01, decay=0.3, sustain=0.5, release=1, filterSpeed=100, filterFreqStart=300, filterFreqEnd=400, resonance=1, hfFilterFreq=1, hfFilterResonance=1 |
+		var sig, env, filtFreq;
+		env = EnvGen.ar(Env.adsr(attack, decay, sustain, release), gate, levelScale:0.5, doneAction:Done.freeSelf);
+		sig = env*Splay.ar(LFSaw.ar(freq*[0.98,0.99,1.0,1.01,1.02],[LFNoise0.kr(2), LFNoise0.kr(1.9), LFNoise0.kr(2.1)]));
+		filtFreq = LFSaw.kr(filterSpeed,iphase:1).range(filterFreqStart,filterFreqEnd);
+		sig = RLPF.ar(sig, filtFreq, resonance);
+		sig = RHPF.ar(sig, hfFilterFreq, hfFilterResonance);
+		2.do({
+			sig = AllpassN.ar(sig, 0.050, [0.050.rand, 0.050.rand], 1);
+		});
+		Out.ar(out, amp*sig.tanh);
+	}).add;
+
 
 	// apply from David Granström.
 	SynthDef(\gabber, {
@@ -121,10 +123,10 @@ s.waitForBoot({
 
 
 	SynthDef(\kick, {
-		arg out=0, amp=0.1, pan=0, filterFreq=4000;
+		arg out=0, amp=0.1, pan=0, filterFreq=4000, rel=0.26;
 		var env0, env1, env1m, sig;
 
-		env0 =  EnvGen.ar(Env.new([0.5, 1, 0.5, 0], [0.005, 0.06, 0.26], [-4, -2, -4]), doneAction:2);
+		env0 =  EnvGen.ar(Env.new([0.5, 1, 0.5, 0], [0.005, 0.06, rel], [-4, -2, -4]), doneAction:2);
 		env1 = EnvGen.ar(Env.new([110, 59, 29], [0.005, 0.29], [-4, -5]));
 		env1m = env1.midicps;
 
@@ -155,6 +157,13 @@ s.waitForBoot({
 		sig = sig * env;
 		sig = Pan2.ar(sig, pan, amp);
 		Out.ar(out, sig);
+	}).add;
+
+	SynthDef(\stretchedFragments, { |out, bufnum, start, time = 1, stretch = 1, amp = 1, attack = 0.01, decay = 0.05|
+		var sig = PlayBuf.ar(1, bufnum, rate: stretch.reciprocal, startPos: start), eg;
+		sig = PitchShift.ar(sig, pitchRatio: stretch);
+		eg = EnvGen.kr(Env.linen(attack, time, decay), sig.abs > 0, doneAction: Done.freeSelf);
+		Out.ar(out, (sig * eg) ! 2)
 	}).add;
 
 // -----------------------------------------------------------------
@@ -188,8 +197,8 @@ s.waitForBoot({
 	SynthDef(\master, {
 		|in, gate=1, out=0|
 		var input = In.ar(in, 2);
-		var shaped = Compander.ar(input, input, -8.dbamp, 1, 0.75, 0.1, 0.3);
-		var limited = Limiter.ar(shaped, -1.dbamp);
+		var shaped = Compander.ar(input, input, -6.dbamp, 1, 0.75, 0.1, 0.3);
+		var limited = Limiter.ar(shaped, -4.dbamp);
 		var releaser = DetectSilence.ar(gate + input, doneAction: 2);
 		Out.ar(out, limited)
 	}).add;
@@ -884,8 +893,9 @@ s.meter;
 // 4) A#1,G#2,C3,F3,G#3,A#3,D#4,F4 -> 34,44,48,53,56,58,63,65
 
 
-// intro melody lead.
+// intro+outro melody lead.
 // 1) F3,A3,F4,E4,C4, A3,C4,D4,G3, C4,A3, D3,G3,F3
+
 // 53,57,65,64,60,
 // 57,60,62,55
 // 60,57
@@ -893,4 +903,11 @@ s.meter;
 
 // last hook melody (gt lick based)
 // A3,F3,C3,D3,A3,F3,C4,A#3,A3,A#3,F#3,C3
+
+(
+Pbindef(\test,
+	\instrument, \default,
+	\midinote, Pseq(~parser.asMidi("f3 a3 f4 e4 c4 a3 c4 d4 g3 c4 a3 d3 g3 f3"), inf),
+).play(t);
+)
 
