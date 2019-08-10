@@ -58,27 +58,27 @@ const exerpedData = [
     path: "./stem-for-web/stem-for-web_chd01.mp3",
     exerpt: `
     Pbindef(\\chords,
-     \\instrument,\\osc,
-     \\dur, 4,
-     \\atk, 0.001,
-     \\sus, 0.5,
-     \\rel, Pseq([Prand([3,5])], inf),
-     \\c0, 0,
-     \\c1, Pwhite(1,10).neg,
-     \\detune, 0.3,
-     \\buf, Prand(~wt_buf[4..9], inf),
-     \\midinote, Pseq([
-        Pn(p1,4),
-        Pn(p2,4),
-        Pn(p3,4),
-        Pn(p4,4),
+      \\instrument, \\osc,
+      \\dur, 4,
+      \\atk, 0.001,
+      \\sus, 0.5,
+      \\rel, Pseq([Prand([3,5])], inf),
+      \\c0, 0,
+      \\c1, Pwhite(1,10).neg,
+      \\detune, 0.3,
+      \\buf, Prand(~wt_buf[4..9], inf),
+      \\midinote, Pseq([
+        Pn([41,53,57,64,67],4),
+        Pn([38,48,60,64,67],4),
+        Pn([46,58,62,65,67],4),
+        Pn([36,55,58,60,67],4),
       ],inf),
-     \\amp, Pseq([Pgeom(0.1,-1.dbamp,4)],inf),
-     \\pan, Pwhite(0.01,0.3) * Pseq([1,-1],inf),
-     \\out, 0,
-     \\rout, ~rbus,
-     \\rsend, -10,
-    ).play(t, quant:1);  
+      \\amp, Pseq([Pgeom(0.1,-1.dbamp,4)],inf),
+      \\pan, Pwhite(0.01,0.3) * Pseq([1,-1],inf),
+      \\out, 0,
+      \\rout, ~rbus,
+      \\rsend, -10,
+    ).play(t, quant:1);
     `
   },
   {
@@ -265,7 +265,7 @@ const exerpedData = [
 			)
 		],
 		[40,18,3,3,15,25,5].normalizeSum, inf)
-	)
+	).play(t, quant:1);
     `
   }
 ];

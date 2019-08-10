@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test:e2e": "vue-cli-service test:e2e",
-    "test:unit": "vue-cli-service test:unit"
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "marching": "^0.3.1",

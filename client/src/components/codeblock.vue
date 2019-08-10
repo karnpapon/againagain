@@ -41,7 +41,6 @@ export default {
   },
   created() {
     this.player = new Tone.Player(this.dataDetails.path)
-   this.player.fadeIn = 0.5 
     // window.audioPlayer = this.player
     // this.audioSource = new Tone.FFT(256)
   },
