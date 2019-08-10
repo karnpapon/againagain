@@ -1,19 +1,7 @@
 <template>
-  <div class="sourcescode" @click="stateMonitoring">
+  <div class="sourcescode" >
     <div @click="toggleRun(dataDetails.def)" class="exerpt-wrapper">
       <pre>
-        <!-- <MyCanvas v-if="isCodeExecuted" style="width: 100%; height: 600px;">
-          <MyDrawer
-  v-for="( obj, index ) of chartValues"
-  :x1="((index / chartValues.length) * 100)"
-  :x2="((index / chartValues.length) * 100) + (100 / chartValues.length)"
-  :y1="100"
-  :y2="100 - obj.val"
-  :color="obj.color"
-  :value="obj.val"
-  :key="index"
-></MyDrawer>
-          </MyCanvas> -->
         <code>{{ dataDetails.exerpt}}</code>
       </pre>
     </div>
@@ -21,13 +9,14 @@
 </template>
 
 <script>
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
-// import Tone from "tone";
+import Tone from "tone";
 
-const socket = io();
+// const socket = io();
 import MyCanvas from "./canvas.vue";
 import MyDrawer from "./drawer.vue";
+import Audio from "../assets/scripts/audiocontext"
 
 export default {
   name: "Codeblock",
@@ -37,31 +26,24 @@ export default {
       waveform: null,
       isCodeExecuted: false,
       def: "",
+      player: null,
       b: "",
-      chartValues: [
-        { val: 24, color: "red" },
-        { val: 32, color: "#0f0" },
-        { val: 66, color: "rebeccapurple" }
-      ]
+      audioSource: null
     };
   },
   mounted() {
     this.def = this.dataDetails.def;
-    let dir = 1;
-    let selectedVal = Math.floor(Math.random() * this.chartValues.length);
-
-    setInterval(() => {
-      if (Math.random() > 0.995) dir *= -1;
-      if (Math.random() > 0.99)
-        selectedVal = Math.floor(Math.random() * this.chartValues.length);
-
-      this.chartValues[selectedVal].val = Math.min(
-        Math.max(this.chartValues[selectedVal].val + dir * 0.5, 0),
-        100
-      );
-    }, 16);
+    
+    this.player.toMaster();
+    this.player.loop = true
+    // 
+    // this.audioMonitoring
   },
-  created() {},
+  created() {
+    this.player = new Tone.Player(this.dataDetails.path)
+    // window.audioPlayer = this.player
+    // this.audioSource = new Tone.FFT(256)
+  },
   destroyed() {},
   components: {
     MyCanvas,
@@ -70,22 +52,33 @@ export default {
   props: {
     dataDetails: Object
   },
-  computed: {},
+  computed: {
+    audioMonitoring(){
+      // this.$emit("clicked", this.player);
+      if(this.player.state === 'started'){
+        console.log("startedddd")
+      }
+    }
+  },
   methods: {
     stateMonitoring(event) {
-      this.$emit("clicked", this.isCodeExecuted, this.dataDetails.def);
+      // this.$emit("clicked", this.isCodeExecuted, this.dataDetails.def);
     },
     toggleRun(def) {
       this.isCodeExecuted = !this.isCodeExecuted;
+      
+      
       if (this.isCodeExecuted) {
-        this.send("playPattern", def);
+      // this.player.buffer.fan(this.$parent.audioSource)
+        this.player.start("@1m")
       } else {
-        this.send("stopPattern", def);
+        this.player.stop()
+        // this.send("stopPattern", def);
       }
     },
-    send(eventType, def) {
-      socket.emit(eventType, def);
-    }
+    // send(eventType, def) {
+      // socket.emit(eventType, def);
+    // }
   }
 };
 </script>
