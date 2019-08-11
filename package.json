@@ -1,31 +1,56 @@
 {
-  "name": "againagain-tbc-version",
-  "version": "1.0.0",
-  "description": "again again TBC version.",
-  "main": "server.js",
+  "name": "againagain-tbcversion",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "node -r esm server/server.js",
-    "dev": "nodemon -r esm server/server.js"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
-  "keywords": [],
-  "author": "Karnpapon Boonput",
-  "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "compression": "^1.7.3",
-    "cors": "^2.8.5",
-    "esm": "^3.2.25",
-    "express": "^4.16.4",
-    "lodash": "^4.17.14",
-    "socket.io": "^2.2.0",
-    "socket.io-client": "^2.2.0",
-    "supercolliderjs": "^0.14.0"
+    "marching": "^0.3.1",
+    "popper.js": "^1.14.6",
+    "register-service-worker": "^1.5.2",
+    "startaudiocontext": "^1.2.1",
+    "tone": "^13.4.9",
+    "vue": "^2.5.17",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "nodemon": "^1.18.7",
-    "vue-loader": "^15.7.0",
-    "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.35.2",
-    "webpack-stream": "^5.2.1"
-  }
+    "@vue/cli-plugin-babel": "^3.2.0",
+    "@vue/cli-plugin-eslint": "^3.5.0",
+    "@vue/cli-service": "^3.7.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^7.0.1",
+    "vue-loader": "^15.7.1",
+    "vue-template-compiler": "^2.6.9"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }
