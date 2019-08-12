@@ -3,11 +3,16 @@
     <div class="headline-section">
       <div class="title-wrapper">
         <div class="headline-wrapper">
-          <h1 class="headline">Again again (2019)</h1>
+          <div class="headline">
+            <a target="blank" href="https://www.youtube.com/user/CadsonDemak">Again again (2019)</a>
+          </div>
           <div class="breakline"/>
           <h1>TBC's Interpretation.</h1>
         </div>
-        <p class="lead">Cadson Demak & The ███████</p>
+        <p class="lead">
+          <a target="blank" href="https://cadsondemak.com/home/">Cadson Demak</a> & 
+          <a target="blank" href="https://www.theblack.codes">The ███████ </a>
+        </p>
       </div>
     </div>
     <canvas id="myCanvas" class="cv"></canvas>
@@ -128,6 +133,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+@import "../assets/styles/_base.scss";
+
 .container {
   background-color: black;
   height: 100vh;
@@ -166,6 +174,18 @@ h3 {
   color: white;
   font-weight: lighter;
   border-bottom: 2px solid;
+
+  a{ text-decoration: none; font-size: 2rem;}
+
+  :hover {
+    color: $main-colorize-color !important;
+    border-bottom: 2px solid $main-colorize-color !important;
+
+  }
+
+  :visited {
+    color: white;
+  }
 }
 
 .headline-wrapper {
@@ -183,6 +203,17 @@ h3 {
 .lead {
   color: white;
   margin-top: unset;
+  font-weight: bold;
+  a {text-decoration: none;}
+
+  :hover {
+    color: $main-colorize-color !important;
+  }
+
+  :visited {
+    color: white;
+  }
+
 }
 
 .codeblock-wrapper {

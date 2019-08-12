@@ -73,7 +73,7 @@ export default {
       if( this.def === "rhythms"){
         this.player.load(`./stem-for-web/stem-for-web_gkick0${this.getRandomInt(0,5)}.mp3`)
       } else if ( this.def === "bass"){
-        this.player.load(`./stem-for-web/stem-for-web_bass0${this.getRandomInt(0,1)}.mp3`)
+        this.player.load(`./stem-for-web/bass0${this.getRandomInt(0,1)}-16bit.wav`)
       } else {
         this.player.load(this.dataDetails.path)
       }

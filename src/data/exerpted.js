@@ -24,7 +24,7 @@ const exerpedData = [
   {
     title: "exerpt-00",
     def: "bass",
-    path: "./stem-for-web/stem-for-web_bass00.mp3",
+    path: "./stem-for-web/bass00-16bit.wav",
     exerpt:`
       Pbindef(\\bass,
        \\instrument,\\osc,
@@ -108,7 +108,7 @@ const exerpedData = [
   {
     title: "exerpt-00",
     def: "arppegg",
-    path: "./stem-for-web/stem-for-web_arp.mp3",
+    path: "./stem-for-web/arp00-16bit.wav",
     exerpt: `
     Pbindef(\\arp,
     	\\instrument, \\fatsaw,

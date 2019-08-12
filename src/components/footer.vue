@@ -2,7 +2,6 @@
   <div class="footer-container">
     <div class="wrapper">
       <div class="details">
-        this project is integrating between
         <p class="underline">
           <a target="blank" href="https://supercollider.github.io/">SuperCollider</a>
         </p>and
@@ -12,18 +11,19 @@
         <p class="underline">
           <a target="blank" href="https://github.com/charlieroberts/marching">marching.js</a>
         </p>
+        are integrated for this project.
       </div>
       <div class="credits">
         <span class="icon">
-          <a target="blank" href="https://github.com/karnpapon">
+          <a target="blank" href="https://github.com/karnpapon/againagain">
             <i class="fab fa-github"></i>
           </a>
         </span>
-        <span class="icon">
+        <!-- <span class="icon">
           <a target="blank" href="https://www.youtube.com/user/CadsonDemak">
             <i class="fab fa-youtube"></i>
           </a>
-        </span>
+        </span> -->
       </div>
     </div>
   </div>
@@ -64,6 +64,7 @@ export default {
 
 .details {
   display: flex;
+  font-weight: bold;
   :hover {
     cursor: pointer;
     color: $main-colorize-color;
