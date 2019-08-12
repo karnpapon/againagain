@@ -10,7 +10,6 @@
         <p class="lead">Cadson Demak & The ███████</p>
       </div>
     </div>
-    <canvas id="myCanvas2" class="cv"></canvas>
     <canvas id="myCanvas" class="cv"></canvas>
     <div id="actx" class="scroll-area" @click="setMarchingPlay">
       <div class="codeblock-wrapper">
@@ -55,32 +54,12 @@ export default {
     this.codes = exerpedData;
     Tone.Transport.start();
     // this.audioSource = new Tone.Analyser
+    this.SDF = window.Marching;
    
   },
   mounted() {
-    this.SDF = window.Marching;
-    const canvas = document.querySelector("#myCanvas");
-    // const ctx = canvas.getContext("2d");
-    // console.log(ctx)
-
-    // ctx.beginPath();
-    // ctx.arc(0, 0, 30, 0, Math.PI * 2, true);
-    // ctx.closePath()
-    // ctx.clip();
-
-    // var img=new Image();
-    // img.onload=function(){
-        // canvas.width=400;
-        // canvas.height=300;
-        // ctx.drawImage(img,0,0,img.width,img.height,0,0,400,300);
-    // }
-    // img.src="../assets/path/path.png";
-
-
-    // ctx.drawImage(img, 0, 0);
-    // ctx.globalCompositeOperation = 'source-in';
-    // ctx.drawImage(YOUR_IMAGE, 0 , 0); 
-    this.SDF.init(canvas);
+    // const canvas = document.querySelector("#myCanvas");
+    this.SDF.init(document.querySelector("canvas"));
     this.SDF.export(window);
     this.childList = this.$refs.child;
 
