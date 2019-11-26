@@ -10,7 +10,7 @@
           <h1>TBC's Interpretation.</h1>
         </div>
         <p class="lead">
-          <a target="blank" href="https://cadsondemak.com/home/">Cadson Demak</a> & 
+          <a target="blank" href="https://cadsondemak.com/home/">Cadson Demak</a> &
           <a target="blank" href="https://www.theblack.codes">The ███████ </a>
         </p>
       </div>
@@ -21,7 +21,7 @@
         <div
           class="codeblock"
           v-for="(item, index) of codes"
-          :class="{'active':childList.some( chld => chld.isCodeExecuted && item.def === chld.def)}"
+          :class="{'active':childList.some( chld => chld.isCodeQueued && item.def === chld.def)}"
           :key="index"
         >
           <Codeblock ref="child" :dataDetails="item" />
@@ -58,12 +58,11 @@ export default {
   created() {
     this.codes = exerpedData;
     Tone.Transport.start();
-    // this.audioSource = new Tone.Analyser
+    this.audioSource = new Tone.Meter
     this.SDF = window.Marching;
-   
+
   },
   mounted() {
-    // const canvas = document.querySelector("#myCanvas");
     this.SDF.init(document.querySelector("canvas"));
     this.SDF.export(window);
     this.childList = this.$refs.child;
@@ -80,7 +79,7 @@ export default {
         this.isMarching = false;
       }
     },
-    
+
   },
   methods: {
     playMarching() {
@@ -89,11 +88,11 @@ export default {
       let s = this.SDF.march(
         (rot = this.SDF.Rotation(
           this.SDF.StairsIntersection(
-            this.SDF.Difference( 
+            this.SDF.Difference(
               this.SDF.Box(Vec3(1.5,1.5,1.5),null,mat1), this.SDF.Sphere( 1, null, mat1 )
             ),
             (repeat = this.SDF.Repeat(
-              (sphere = this.SDF.Torus( Vec2(.05,.05),null)),
+              (sphere = this.SDF.Triangle(null,null,null,null,mat1)),
               Vec3(0.25)
             )),
             0.125
@@ -104,9 +103,10 @@ export default {
         // .light(this.SDF.Light(Vec3(0.5, 1, 0.24), Vec3(1), 1))
         .render(2.5, true);
       this.SDF.FFT.start();
-      // // Audio.start(this.audioSource) 
+      // console.log("this.this.audioSource", this.audioSource)
+      // // Audio.start(this.audioSource)
       window.onframe = time => {
-        rot.angle = (time) / 4;
+        rot.angle = (time) / 2;
         // repeat.distance.x = this.SDF.FFT.low;
         repeat.distance.y = this.SDF.FFT.mid;
         repeat.distance.z = this.SDF.FFT.high;
@@ -204,7 +204,7 @@ h3 {
   color: white;
   margin-top: unset;
   font-weight: bold;
-  a {text-decoration: none;}
+  a {text-decoration: none; color: white;}
 
   :hover {
     color: $main-colorize-color !important;
@@ -239,12 +239,33 @@ h3 {
   }
 
   :active {
-    background-color: #4f00ff;
+    background-color: black;
+    color: white;
   }
 }
 
 .active {
   box-shadow: inset 0px 0px 0px 1px rgb(255, 255, 255);
+}
+
+@keyframes blink {
+  0% {
+    background-color: #000000;
+    color: white;
+  }
+  50% {
+    background-color: rgb(255, 255, 255);
+    color: black;
+  }
+  100% {
+    background-color: #000000;
+    color: white;
+  }
+}
+
+.queue{
+  transition:all 0.5s ease-in-out;
+  animation:blink normal 0.5s infinite ease-in-out;
 }
 
 .scroll-area {

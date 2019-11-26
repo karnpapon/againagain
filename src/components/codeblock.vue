@@ -19,6 +19,7 @@ export default {
       meter: null,
       waveform: null,
       isCodeExecuted: false,
+      isCodeQueued: false,
       def: "",
       player: null,
       b: "",
@@ -31,6 +32,7 @@ export default {
   mounted() {
     this.player.connect( this.comp)
     this.comp.connect(this.limiter)
+    this.player.fan(this.$parent.audioSource)
     this.limiter.toMaster();
     this.player.loop = true
   },
@@ -53,16 +55,24 @@ export default {
     dataDetails: Object
   },
   computed: {
+    // isPlayerStarted(){
+    //   if( this.player.state){
+    //     console.log("quantize playing")
+    //   }
+    // }
   },
   methods: {
     toggleRun() {
-      this.isCodeExecuted = !this.isCodeExecuted;
-      if (this.isCodeExecuted) {
+      this.isCodeQueued = !this.isCodeQueued;
+      if (this.isCodeQueued) {
         this.handlePlaying()
         this.player.start("@1m")
+        this.isCodeExecuted = true
       } else {
         this.player.stop()
+        this.isCodeExecuted = false
       }
+      // this.isPlayerStarted
     },
     getRandomInt(min, max) {
       let _min = Math.ceil(min);

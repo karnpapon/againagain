@@ -74,6 +74,7 @@ export default {
 .underline {
   text-decoration: underline;
   margin: 0 5px;
+  a{ color: white;};
 
   :hover {
     color: $main-colorize-color !important;
