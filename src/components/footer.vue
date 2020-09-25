@@ -2,16 +2,16 @@
   <div class="footer-container">
     <div class="wrapper">
       <div class="details">
+        using
         <p class="underline">
           <a target="blank" href="https://supercollider.github.io/">SuperCollider</a>
-        </p>and
+        </p>/
         <p class="underline">
           <a target="blank" href="https://vuejs.org/">Vue.js</a>
-        </p>and
+        </p>/
         <p class="underline">
           <a target="blank" href="https://github.com/charlieroberts/marching">marching.js</a>
         </p>
-        are integrated for this project.
       </div>
       <div class="credits">
         <span class="icon">

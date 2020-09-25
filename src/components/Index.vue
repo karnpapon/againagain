@@ -11,7 +11,7 @@
         </div>
         <p class="lead">
           <a target="blank" href="https://cadsondemak.com/home/">Cadson Demak</a> &
-          <a target="blank" href="https://www.theblack.codes">The ███████ </a>
+          <a target="blank" href="https://theblackcodes.netlify.app">The ███████ </a>
         </p>
       </div>
     </div>

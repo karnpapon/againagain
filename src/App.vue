@@ -37,6 +37,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a, a:visited{
+  color: white;
+}
+
 p,
 h1,
 i {
